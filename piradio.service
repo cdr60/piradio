@@ -1,0 +1,17 @@
+[Unit]
+Description=PiRadio
+After=rc-local.service
+
+
+[Service]
+Type=simple
+#Restart=always
+User=root
+ExecStart=/usr/bin/python3 /home/pi/piradio/piradio.py
+#TimeoutSec=infinity
+PIDFile=/home/pi/piradio/piradio.pid
+
+[Install]
+WantedBy=multi-user.target
+
+

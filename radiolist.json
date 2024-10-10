@@ -1,0 +1,6 @@
+[
+  {"id":"0", "name":"MBS" , "url":"https://mbs.ice.infomaniak.ch/mbs-128.mp3"},
+  {"id":"1", "name":"Nostalgie" , "url":"https://scdn.nrjaudio.fm/adwz2/fr/30601/mp3_128.mp3?origine=radio.net"},
+  {"id":"2", "name":"Oui FM" , "url":"https://ouifm.ice.infomaniak.ch/ouifm-high.mp3"},
+  {"id":"3", "name":"Floyd Rock" , "url":"http://91.121.59.45:8013/stream"}
+]

@@ -1,0 +1,16 @@
+Adafruit-Blinka==8.48.0
+adafruit-circuitpython-busdevice==5.2.10
+adafruit-circuitpython-connectionmanager==3.1.2
+adafruit-circuitpython-ds1307==2.1.20
+adafruit-circuitpython-register==1.10.1
+adafruit-circuitpython-requests==4.1.8
+adafruit-circuitpython-typing==1.10.1
+Adafruit-DHT==1.4.0
+Adafruit-PlatformDetect==3.75.0
+Adafruit-PureIO==1.1.11
+Adafruit-Python-DHT==1.4.0
+requests==2.21.0
+RPi.GPIO==0.7.0
+smbus==1.1.post2
+spidev==3.5
+urllib3==1.24.1
