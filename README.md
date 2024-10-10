@@ -1,4 +1,5 @@
-#Pi Radio
+# Pi Radio
+
 Pi Radio is a web radio station
 It's using a web radio list file named radiolist.json
 You are free to add any radio you want in this file
@@ -15,3 +16,24 @@ Pi Radio comes with 4 boutons :
 
 PiRadio use a DHT sensor that will show tempereratues and humidity
 It uses internet time to show you the date ans time of the day
+
+# installpackage.sh and requirements.txt
+It's a script shell and a pytohn3 requirement list to help you to install requirements.
+
+# dht22.py
+It's a small python script to help you to test your dht sensor
+
+# piradio.py
+The main script
+
+# liquidcrystal_i2c.py
+The python screen driver for the lcd1602 i2c (do not forget to activate i2c interface !)
+
+# installservice.sh
+A bash script that will install the service (auto start at boot) using piradio.service
+By default, you have to use /home/pi/piradio/ folder (you can change that if you want)
+
+# the box is 3D printed
+see 3dprint folder
+
+
