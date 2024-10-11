@@ -40,6 +40,8 @@ By default, you have to use /home/pi/piradio/ folder (you can change that if you
 see 3dprint folder
 ![Sketchup_Overview2](https://github.com/user-attachments/assets/a73d35e3-c204-4bd8-b83d-8a3129735ebc)
 
+# Electrical schema
+![Capture d'écran 2024-10-11 134901](https://github.com/user-attachments/assets/a83eb93c-3c14-423e-aa76-982d3b0f300e)
 
 
 
