@@ -1,4 +1,7 @@
 # Pi Radio
+![LCD](https://github.com/user-attachments/assets/e973a910-e17a-4fd1-bf85-f4c63b5a746b)
+
+You are listening MBS Radio, it's 13h30. Temperature is 21°C and Humidity is 58%
 
 Pi Radio is a web radio station
 It's using a web radio list file named radiolist.json
