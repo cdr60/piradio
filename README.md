@@ -38,5 +38,8 @@ By default, you have to use /home/pi/piradio/ folder (you can change that if you
 
 # the box is 3D printed
 see 3dprint folder
+![Sketchup_Overview2](https://github.com/user-attachments/assets/a73d35e3-c204-4bd8-b83d-8a3129735ebc)
+
+
 
 
