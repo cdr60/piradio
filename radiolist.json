@@ -2,5 +2,24 @@
   {"id":"0", "name":"MBS" , "url":"https://mbs.ice.infomaniak.ch/mbs-128.mp3"},
   {"id":"1", "name":"Nostalgie" , "url":"https://scdn.nrjaudio.fm/adwz2/fr/30601/mp3_128.mp3?origine=radio.net"},
   {"id":"2", "name":"Oui FM" , "url":"https://ouifm.ice.infomaniak.ch/ouifm-high.mp3"},
-  {"id":"3", "name":"Floyd Rock" , "url":"http://91.121.59.45:8013/stream"}
+  {"id":"3", "name":"Floyd Rock" , "url":"http://91.121.59.45:8013/stream"},
+  {"id":"4", "name":"Fr Info" , "url":"http://direct.franceinfo.fr/live/franceinfo-midfi.mp3"},
+  {"id":"5", "name":"Fr Inter" , "url":"http://icecast.radiofrance.fr/franceinter-hifi.aac"},
+  {"id":"6", "name":"FIP" , "url":"http://icecast.radiofrance.fr/fip-hifi.aac"},
+  {"id":"7", "name":"Europe 1" , "url":"https://europe1.lmn.fm/europe1.aac"},
+  {"id":"8", "name":"NRJ" , "url":"http://cdn.nrjaudio.fm/audio1/fr/30001/mp3_128.mp3?origine=fluxradios?1535727639539.mp3"},
+  {"id":"9", "name":"Skyrock" , "url":"http://icecast.skyrock.net/s/natio_mp3_128k"},
+  {"id":"10", "name":"Fr Musique" , "url":"http://icecast.radiofrance.fr/francemusique-hifi.aac"},
+  {"id":"11", "name":"Radio 80" , "url":"http://100radio-80.ice.infomaniak.ch/100radio-80-128.mp3"},
+  {"id":"12", "name":"Rires et" , "url":"http://185.52.127.168/fr/30401/aac_64.mp3"},
+  {"id":"13", "name":"RTL2" , "url":"http://streamer-02.rtl.fr/rtl2-1-44-128"},
+  {"id":"14", "name":"FUN Radio" , "url":"http://icecast.funradio.fr/fun-1-44-128"},
+  {"id":"15", "name":"Cherie Fm" , "url":"http://cdn.nrjaudio.fm/audio1/fr/30201/mp3_128.mp3"},
+  {"id":"16", "name":"Chante Fr" , "url":"http://stream.chantefrance.com/Chante_France"},
+  {"id":"17", "name":"Radio Metal" , "url":"http://hd.lagrosseradio.info/lagrosseradio-metal-192.mp3"},
+  {"id":"18", "name":"RFM" , "url":"http://stream.rfm.fr/rfm.mp3"},
+  {"id":"19", "name":"New Wave" , "url":"http://cdn.nrjaudio.fm/adwz1/fr/30703/mp3_128.mp3"},
+  {"id":"20", "name":"Chante Fr70" , "url":"http://stream.chantefrance.com/cf-70"}
+  
+  
 ]

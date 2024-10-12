@@ -148,10 +148,13 @@ class MaRadio():
 		#Chargement fichier ini: descriptions des fonctionnalités
 		###################################################
 		self.radiolistfilename=os.path.dirname(os.path.realpath(__file__))+"/radiolist.json"
-		self.radiolist=loadjson(self.radiolistfilename)
+		self.radiolist=loadjson(self.radiolistfilename,"name")
 		for i in range(0,len(self.radiolist)):
 			print("Station "+str(i)+" id:"+str(self.radiolist[i]["id"])+"  nom:"+self.radiolist[i]["name"]+"  url:"+self.radiolist[i]["url"])
 		self.radioselected=-1
+		self.radioparamfilename=os.path.dirname(os.path.realpath(__file__))+"/radioparam.ini"
+		r=loadradioini(self.radioparamfilename)
+		self.radioselected=r["radioselected"]
 		#####################
 		#Clavier
 		#####################
@@ -280,6 +283,8 @@ class MaRadio():
 			#print("Selected : "+self.radiolist[self.radioselected]["name"])
 			self.start_stop_playing_radio(self.radiolist[self.radioselected]["url"])
 		self.oldmin=-1
+
+		saveini({"radioselected":self.radioselected},self.radioparamfilename)
 		return
 		
 	def prev_station(self,liste=[]):
@@ -291,6 +296,7 @@ class MaRadio():
 			#print("Selected : "+self.radiolist[self.radioselected]["name"])
 			self.start_stop_playing_radio(self.radiolist[self.radioselected]["url"])
 		self.oldmin=-1
+		saveini({"radioselected":self.radioselected},self.radioparamfilename)
 		return
 		
 ######################################
