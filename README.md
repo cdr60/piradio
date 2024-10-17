@@ -1,4 +1,8 @@
 # Pi Radio
+
+![20241017_224910](https://github.com/user-attachments/assets/f6f1069a-454a-4585-9832-0624c3ea267a)
+
+
 You are listening MBS Radio, it's 13h30. Temperature is 21°C and Humidity is 58%
 ![LCD](https://github.com/user-attachments/assets/e973a910-e17a-4fd1-bf85-f4c63b5a746b)
 
