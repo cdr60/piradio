@@ -24,7 +24,7 @@ def loadjson(jsonfile,sortedby="id"):
 
 
 def loadradioini(ficini):
-	result={"radioselected":-1}
+	result={"radioselected":-1,"tempoffset":0}
 	print("Lecture de "+ficini)
 	parser = ConfigParser()
 	if os.path.exists(ficini)==False:
@@ -43,6 +43,16 @@ def loadradioini(ficini):
 		except:
 			result["radioselected"]=-1
 	else: parser.set("radio","radioselected",str(result["radioselected"]))
+	#######################################################
+	# OFFSET TEMP
+	#######################################################
+	if (parser.has_option("radio", "tempoffset")):
+		s=parser.get("radio", "tempoffset")
+		try:
+			result["tempoffset"]=int(s)
+		except:
+			result["tempoffset"]=0
+	else: parser.set("radio","tempoffset",str(result["tempoffset"]))
 
 	with open(ficini, 'w') as configfile:
 		parser.write(configfile)	

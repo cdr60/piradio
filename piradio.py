@@ -25,12 +25,12 @@ def printcurrentdatetime():
 	print(current_time)
 	
 
-def get_dht(sensor,pin):
+def get_dht(sensor,pin,offset=0):
 	try:
 		humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
 	except:
 		humidity, temperature=None,None
-	return temperature,humidity
+	return temperature + offset,humidity
 
 def starting_rtc():
 	i2c = board.I2C()
@@ -155,6 +155,7 @@ class MaRadio():
 		self.radioparamfilename=os.path.dirname(os.path.realpath(__file__))+"/radioparam.ini"
 		r=loadradioini(self.radioparamfilename)
 		self.radioselected=r["radioselected"]
+		self.tempoffset=r["tempoffset"]
 		#####################
 		#Clavier
 		#####################
@@ -166,7 +167,7 @@ class MaRadio():
 		# INIT DISPLAY
 		#####################################
 		try:
-			self.lcd=liquidcrystal_i2c.lcd(0x20)
+			self.lcd=liquidcrystal_i2c.lcd(0x27)
 		except:
 			print("----------------------------------------")
 			print("Erreur de communication avec l'écran LCD")
@@ -245,7 +246,7 @@ class MaRadio():
 				todo=1
 			if (todo==1):
 				self.ts_last_temp=datetime.datetime.now()
-				temp,humidity=get_dht(self.dht_sensor,self.dht_pin)
+				temp,humidity=get_dht(self.dht_sensor,self.dht_pin,self.tempoffset)
 				if (temp!=None): 
 					self.old_temp,self.old_humidity=temp,humidity
 				else: temp,humidity = self.old_temp,self.old_humidity
