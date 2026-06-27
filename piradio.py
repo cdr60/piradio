@@ -14,9 +14,13 @@ from tools import *
 import board
 import adafruit_ds1307
 import Adafruit_DHT
+import configparser
+
+# Import de Flask pour la page web
+from flask import Flask, render_template, request, jsonify
 
 #apt-get install python3-rpi.gpio python3-spidev python3-pil libgpiod2 python3-smbus i2c-tools gstreamer1.0-x ffmpeg
-#pip3 install adafruit-circuitpython-ds1307 smbus Adafruit_Python_DHT playsound --break-system-packages
+#pip3 install adafruit-circuitpython-ds1307 smbus Adafruit_Python_DHT playsound --break-system-packages flask
 
 
 def printcurrentdatetime():
@@ -299,7 +303,77 @@ class MaRadio():
 		self.oldmin=-1
 		saveini({"radioselected":self.radioselected},self.radioparamfilename)
 		return
-		
+######################################
+# PARTIE SERVEUR WEB (FLASK)
+######################################
+web_app = Flask(__name__)
+reveil = None  # Sera initialisé dans le main
+
+@web_app.route('/')
+def index():
+	# Lit l'état depuis le fichier .ini pour être raccord avec l'appareil
+	config = configparser.ConfigParser()
+	config.read(reveil.radioparamfilename)
+	current_id = config.get('radio', 'radioselected', fallback="0")
+	is_playing = reveil.radiothread is not None
+	return render_template('index.html', radios=reveil.radiolist, current_id=str(current_id), is_playing=is_playing)
+	
+# Route pour envoyer l'état complet (y compris température et humidité) en temps réel
+@web_app.route('/status', methods=['GET'])
+def get_status():
+	is_playing = reveil.radiothread is not None
+	# On formate proprement pour éviter les valeurs "None" sur le site
+	temp_val = f"{reveil.old_temp}°C" if reveil.old_temp is not None else "--°C"
+	hum_val = f"{reveil.old_humidity}%" if reveil.old_humidity is not None else "--%"
+	
+	return jsonify({
+		"is_playing": is_playing,
+		"current_id": reveil.radioselected,
+		"temperature": temp_val,
+		"humidity": hum_val
+	})
+	
+@web_app.route('/action', methods=['POST'])
+def click_btn1():
+	# Bouton 1 (à gauche) -> Appui long = POWEROFF
+	# Par sécurité sur le web, on peut choisir de couper le son, ou de l'éteindre pour de vrai :
+	print("🔌 Ordre d'extinction reçu depuis le Web")
+	reveil.poweroff()
+	return jsonify({"status": "success"})
+
+@web_app.route('/click/btn2', methods=['POST'])
+def click_btn2():
+	# Bouton 2 -> Appui court = START / STOP radio
+	if reveil.radiothread is not None:
+		reveil.start_stop_playing_radio("") # Stop
+	elif reveil.radioselected > -1:
+		reveil.start_stop_playing_radio(reveil.radiolist[reveil.radioselected]["url"]) # Start
+	reveil.oldmin = -1
+	return jsonify({"status": "success"})
+
+
+@web_app.route('/click/btn3', methods=['POST'])
+def click_btn3():
+	# Bouton 3 -> STATION PRÉCÉDENTE
+	reveil.prev_station(reveil.radiolist)
+	reveil.oldmin = -1
+	return jsonify({"status": "success", "is_playing": is_playing, "current_id": str(reveil.radioselected)})
+
+@web_app.route('/click/btn4', methods=['POST'])
+def click_btn4():
+	# Bouton 4 (à droite) -> STATION SUIVANTE
+	reveil.next_station(reveil.radiolist)
+	reveil.oldmin = -1
+	return jsonify({"status": "success", "is_playing": is_playing, "current_id": str(reveil.radioselected)})
+
+def run_flask():
+	# Désactive le logger par défaut pour éviter de polluer la console
+	import logging
+	log = logging.getLogger('werkzeug')
+	log.setLevel(logging.ERROR)
+	web_app.run(host='0.0.0.0', port=80, debug=False, use_reloader=False)
+	
+	
 ######################################
 if (__name__ == "__main__"):
 	
@@ -331,12 +405,44 @@ if (__name__ == "__main__"):
 	#########################################################
 	# FIN DES VERIFICATIONS INITIALES
 	#########################################################
+	
+	# DÉMARRAGE DU SERVEUR WEB DANS UN THREAD SÉPARÉ
+	web_thread = threading.Thread(target=run_flask)
+	web_thread.daemon = True
+	web_thread.start()
+	print("Serveur Web démarré sur http://[IP_DU_RASPBERRY]:5000")
+	
 	#Clavier
 	reveil.KB.start()
-	#Boucle infinie
+	
+	# Variable locale pour détecter un changement externe du fichier .ini par le web
+	last_ini_radio = reveil.radioselected
+	
+	# Variables de temps pour espacer la vérification du fichier INI
+	dernier_check_ini = 0
+	intervalle_check_ini = 1.0  # On vérifie le fichier toutes les 1.0 seconde
 	
 	while True:
 		try:
+
+			# 1. Vérification du fichier INI (Web -> Écran) espacée dans le temps de intervalle_check_ini
+			temps_actuel = time.time()
+			if (temps_actuel - dernier_check_ini) >= intervalle_check_ini:
+				dernier_check_ini = temps_actuel
+				
+				config = configparser.ConfigParser()
+				try:
+					if os.path.exists(reveil.radioparamfilename):
+						config.read(reveil.radioparamfilename)
+						ini_radio = int(config.get('radio', 'radioselected', fallback=reveil.radioselected))
+						if ini_radio != last_ini_radio:
+							reveil.radioselected = ini_radio
+							last_ini_radio = ini_radio
+							reveil.oldmin = -1  # Force l'écran à se mettre à jour
+				except:
+					pass
+			
+			# 2. Gestion ecran
 			reveil.ecran_heure()
 			reveil.KB.lock.acquire()
 			btn,typ=reveil.KB.wich_btn()
