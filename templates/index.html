@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Radio Controller</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; text-align: center; background: #eef2f7; color: #333; padding: 20px; margin: 0; }
+        .container { max-width: 450px; margin: 0 auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-top: 0; font-size: 24px; margin-bottom: 20px; }
+        
+        /* Horloge */
+        .clock-box { margin-bottom: 20px; color: #475569; }
+        .clock-time { font-size: 36px; font-weight: bold; color: #1e293b; font-variant-numeric: tabular-nums; }
+        .clock-date { font-size: 14px; text-transform: capitalize; margin-top: 2px; color: #64748b; }
+
+        /* Météo */
+        .weather-box { display: flex; justify-content: space-around; background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 1px solid #e2e8f0; }
+        .weather-item { display: flex; flex-direction: column; align-items: center; }
+        .weather-label { font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; }
+        .weather-value { font-size: 22px; font-weight: bold; color: #0f172a; margin-top: 5px; }
+
+        /* Menu déroulant caché ou conservé pour info */
+        .controls { margin: 20px 0; }
+        select { font-size: 16px; padding: 12px; width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; background-color: #fff; cursor: pointer; }
+        
+        /* ZONE MODE D'EMPLOI DES BOUTONS */
+        .manual-container { background: #f8fafc; padding: 20px 10px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px; }
+        .manual-title { font-size: 14px; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px; }
+        
+        .buttons-row { display: flex; justify-content: space-around; align-items: flex-start; }
+        .button-block { display: flex; flex-direction: column; align-items: center; width: 23%; }
+        
+        /* Boutons ronds physiques simulés */
+        .round-btn {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.1s, box-shadow 0.1s;
+            margin-bottom: 8px;
+        }
+        .round-btn:active { transform: scale(0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        .btn-green { background: radial-gradient(circle at 30% 30%, #10b981, #047857); }
+        .btn-blue { background: radial-gradient(circle at 30% 30%, #3b82f6, #1d4ed8); }
+        .btn-yellow { background: radial-gradient(circle at 30% 30%, #facc15, #b45309); }
+        .btn-red { background: radial-gradient(circle at 30% 30%, #ef4444, #b91c1c); }
+
+        /* Légendes du mode d'emploi */
+        .btn-legend { font-size: 11px; color: #475569; font-weight: 500; line-height: 1.3; }
+        .btn-action { font-weight: bold; color: #0f172a; display: block; margin-bottom: 2px; }
+
+        .status { margin-top: 20px; font-weight: 500; color: #64748b; font-size: 14px; background: #f1f5f9; padding: 10px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📻 Mon Web Radio Pi</h1>
+
+    <div class="clock-box">
+        <div class="clock-time" id="js-time">00:00:00</div>
+        <div class="clock-date" id="js-date">---</div>
+    </div>
+
+    <div class="weather-box">
+        <div class="weather-item">
+            <span class="weather-label">🌡️ Température</span>
+            <span class="weather-value" id="temp-display">--°C</span>
+        </div>
+        <div class="weather-item">
+            <span class="weather-label">💧 Humidité</span>
+            <span class="weather-value" id="hum-display">--%</span>
+        </div>
+    </div>
+
+    <div class="controls">
+		<select id="radio-select" disabled >
+            {% for radio in radios %}
+                <option value="{{ loop.index0 }}" {% if loop.index0 == current_id %}selected{% endif %}>
+                    {{ radio.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="manual-container">
+        <div class="manual-title">🎛️ Mode d'emploi des Boutons</div>
+        <div class="buttons-row">
+            
+            <div class="button-block">
+                <button class="round-btn btn-green" onclick="sendButtonClick('/click/btn1')"></button>
+                <div class="btn-legend">
+                    <span class="btn-action">🔌 Éteindre</span>
+                    (appui long)
+                </div>
+            </div>
+
+            <div class="button-block">
+                <button class="round-btn btn-blue" onclick="sendButtonClick('/click/btn2')"></button>
+                <div class="btn-legend">
+                    <span class="btn-action">⏯️ Play/Stop</span>
+                    (appui court)
+                </div>
+            </div>
+
+            <div class="button-block">
+                <button class="round-btn btn-yellow" onclick="sendButtonClick('/click/btn3')"></button>
+                <div class="btn-legend">
+                    <span class="btn-action">⏮️ Précédent</span>
+                    (appui court)
+                </div>
+            </div>
+
+            <div class="button-block">
+                <button class="round-btn btn-red" onclick="sendButtonClick('/click/btn4')"></button>
+                <div class="btn-legend">
+                    <span class="btn-action">⏭️ Suivant</span>
+                    (appui court)
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="status" id="status-text">
+        Statut : Connexion au Raspberry Pi...
+    </div>
+</div>
+
+<script>
+    // 1. HORLOGE LOCALE
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('js-time').innerText = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        document.getElementById('js-date').innerText = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // 2. REQUÊTE BOUTON WEB
+    function sendButtonClick(url) {
+        fetch(url, { method: 'POST' })
+        .then(() => {
+            updateRadioStatus();
+        })
+        .catch(err => console.error("Erreur bouton:", err));
+    }
+
+    // 3. SYNCHRO STATUT RADIO (2s)
+    function updateRadioStatus() {
+        fetch('/status')
+        .then(response => response.json())
+        .then(data => {
+            const statusText = document.getElementById('status-text');
+            statusText.innerText = (data.is_playing) ? "Statut : Lecture en cours..." : "Statut : Arrêté";
+
+            const selectElem = document.getElementById('radio-select');
+            if(selectElem.value != data.current_id) selectElem.value = data.current_id;
+        })
+        .catch(err => console.error("Erreur statut radio:", err));
+    }
+    updateRadioStatus();
+    setInterval(updateRadioStatus, 2000);
+
+    // 4. SYNCHRO MÉTÉO (30s)
+    function updateWeather() {
+        fetch('/status')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('temp-display').innerText = data.temperature;
+            document.getElementById('hum-display').innerText = data.humidity;
+        })
+        .catch(err => console.error("Erreur météo:", err));
+    }
+    updateWeather();
+    setInterval(updateWeather, 30000);
+</script>
+
+</body>
+</html>
