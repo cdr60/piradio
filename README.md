@@ -47,5 +47,7 @@ see 3dprint folder
 # Electrical schema
 ![Capture d'écran 2024-10-11 134901](https://github.com/user-attachments/assets/a83eb93c-3c14-423e-aa76-982d3b0f300e)
 
+#Using WebCli
+http://rapberryip/
 
-
+![Web](https://github.com/cdr60/piradio/blob/mainweb/webradiocli.png?raw=true)
