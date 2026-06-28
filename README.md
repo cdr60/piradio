@@ -49,4 +49,5 @@ see 3dprint folder
 
 #Using WebCli
 http://rapberryip/
-![Capture d'écran 2024-10-11 134901](https://github.com/cdr60/piradio/blob/mainweb/webradiocli.png?raw=true)
+
+![Web](https://github.com/cdr60/piradio/blob/mainweb/webradiocli.png?raw=true)
